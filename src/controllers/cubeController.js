@@ -1,30 +1,46 @@
 const router = require("express").Router();
+const { body, validationResult } = require("express-validator");
+
 const cubeService = require("../services/cubeService");
 const accessoryService = require("../services/accessoryService");
 const { isAuth } = require("../middlewares/authMiddleware");
-
 
 router.get("/create", isAuth, (req, res) => {
     res.render("create");
 });
 
-router.post("/create", isAuth, async (req, res) => {
-    const cube = req.body;
-    cube.owener = req.user._id;
+router.post(
+    "/create",
+    isAuth,
+    body("name", "Name is required").not().isEmpty(),
+    body("description").isLength({ min: 5, max: 120 }),
+    body("difficultyLevel", "Difficulty level is required to be in range from 1 to 6.").toInt().isInt({ min: 1, max: 6 }),
+    async (req, res) => {
+        const cube = req.body;
 
-    //Validate the
-    if (cube.name.length < 2) {
-        return res.status(400).send("Invalid request");
-    }
+        cube.owener = req.user._id;
 
-    //Save Data
-    try {
-        await cubeService.create(cube);
-        res.redirect("/");
-    } catch (error) {
-        res.status(400).send(error);
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return res.status(400).send(errors.array()[0].msg);
+        }
+
+        //Validate the
+        if (cube.name.length < 2) {
+            return res.status(400).send("Invalid request");
+        }
+
+        //Save Data
+        try {
+            await cubeService.create(cube);
+            res.redirect("/");
+        } catch (error) {
+            res.status(400).send(error);
+            const cube = req.body;
+        }
     }
-});
+);
 
 router.get("/details/:id", async (req, res) => {
     const cube = await cubeService.getOneDetailed(req.params.id).lean();
@@ -72,16 +88,16 @@ router.post("/:cubeId/edit", isAuth, async (req, res) => {
     res.redirect(`/cube/details/${modifiedCube._id}`);
 });
 
-router.get('/:cubeId/delete', async (req, res) => {
+router.get("/:cubeId/delete", async (req, res) => {
     const cube = await cubeService.getOne(req.params.cubeId).lean();
 
     res.render("cube/delete", { cube });
 });
 
-router.post('/:cubeId/delete', async (req, res) => {
+router.post("/:cubeId/delete", async (req, res) => {
     await cubeService.delete(req.params.cubeId);
 
-    res.redirect('/');
+    res.redirect("/");
 });
 
 module.exports = router;
