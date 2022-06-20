@@ -6,5 +6,4 @@ exports.modelValidator = (Model) => async (req, res, next) => {
     } catch (error) {
         res.status(400).send(Object.values(error)[0]);
     }
-
-}
+};

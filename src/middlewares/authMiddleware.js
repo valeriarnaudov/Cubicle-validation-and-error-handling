@@ -1,7 +1,7 @@
-const jwt = require('jsonwebtoken');
-const { promisify } = require('util');
+const jwt = require("jsonwebtoken");
+const { promisify } = require("util");
 
-const { sessionName, secret } = require('../constants');
+const { sessionName, secret } = require("../constants");
 
 const jwtVerify = promisify(jwt.verify);
 
@@ -14,24 +14,18 @@ exports.auth = async (req, res, next) => {
 
             req.user = decodedToken;
             res.locals.user = decodedToken;
-
         } catch (err) {
-            return res.redirect('/');
+            return res.redirect("/");
         }
-
     }
 
-
-
     next();
-}
+};
 
-exports.isAuth = (req, res, next) => { 
+exports.isAuth = (req, res, next) => {
     if (!req.user) {
-        return res.redirect('/404');
-    } 
-    
-
+        return res.redirect("/404");
+    }
 
     next();
-}
+};

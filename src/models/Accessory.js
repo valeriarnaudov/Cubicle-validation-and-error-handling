@@ -1,19 +1,19 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const accessorySchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: true,
     },
     imageUrl: {
         type: String,
         required: true,
         validate: {
             // validator: /^https?/g,
-            validator: function() {
-                return this.imageUrl.startsWith('http');
+            validator: function () {
+                return this.imageUrl.startsWith("http");
             },
-            message: 'Image URL must start with http or https'
+            message: "Image URL must start with http or https",
         },
     },
     description: {
@@ -21,13 +21,14 @@ const accessorySchema = new mongoose.Schema({
         required: true,
         maxLength: 120,
     },
-    cubes: [{
-        type: mongoose.Types.ObjectId,
-        ref: 'Cube',
-    }],
+    cubes: [
+        {
+            type: mongoose.Types.ObjectId,
+            ref: "Cube",
+        },
+    ],
 });
 
-
-const Accessory = mongoose.model('Accessory', accessorySchema);
+const Accessory = mongoose.model("Accessory", accessorySchema);
 
 module.exports = Accessory;

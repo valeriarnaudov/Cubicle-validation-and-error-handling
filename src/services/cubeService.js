@@ -13,9 +13,11 @@ exports.getAll = async (search = "", fromInput, toImput) => {
     //     difficultyLevel: { $and: [{ $gte: from }, { $lte: to }] },
     // }).lean();
 
-    let cubes = await Cube.find({ name: { $regex: new RegExp(search, "i") }})
-    .where("difficultyLevel").gte(from).lte(to)
-    .lean();
+    let cubes = await Cube.find({ name: { $regex: new RegExp(search, "i") } })
+        .where("difficultyLevel")
+        .gte(from)
+        .lte(to)
+        .lean();
 
     // const result = cubes
     //     .filter((x) => x.name.toLowerCase().includes(search?.toLowerCase()))
@@ -41,10 +43,10 @@ exports.getOneDetailed = (cubeId) =>
 
 exports.create = (cube) => Cube.create(cube);
 
-exports.edit = (cubeId, cubeData) => Cube.findByIdAndUpdate(cubeId, cubeData, {runValidators: true});
+exports.edit = (cubeId, cubeData) =>
+    Cube.findByIdAndUpdate(cubeId, cubeData, { runValidators: true });
 
 exports.delete = (cubeId) => Cube.findByIdAndDelete(cubeId);
-
 
 exports.attachAccessory = async (cubeId, accessoryId) => {
     const cube = await Cube.findById(cubeId);
@@ -58,4 +60,3 @@ exports.attachAccessory = async (cubeId, accessoryId) => {
 
     return cube;
 };
-

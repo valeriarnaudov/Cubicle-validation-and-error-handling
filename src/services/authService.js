@@ -10,16 +10,14 @@ exports.register = async ({ username, password, repeatPassword }) => {
     // }
 
     // let hashedPassword = await bcrypt.hash(password, saltRounds);
-    try {
-        let createdUser = User.create({
-            username,
-            password: hashedPassword,
-        });
 
-        return createdUser;
-    } catch (error) {
-        return error;
-    }
+    let createdUser = await User.create({
+        username,
+        password: hashedPassword,
+        repeatPassword,
+    });
+
+    return createdUser;
 
     // let createdUser = new User({
     //     username,
@@ -38,7 +36,9 @@ exports.login = async ({ username, password }) => {
     let isValid = await bcrypt.compare(password, user.password);
 
     if (!isValid) {
-        return;
+        throw {
+            message: "Invalid username or password",
+        };
     }
 
     let result = new Promise((resolve, reject) => {

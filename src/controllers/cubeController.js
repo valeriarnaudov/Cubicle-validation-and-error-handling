@@ -14,7 +14,12 @@ router.post(
     isAuth,
     body("name", "Name is required").not().isEmpty(),
     body("description").isLength({ min: 5, max: 120 }),
-    body("difficultyLevel", "Difficulty level is required to be in range from 1 to 6.").toInt().isInt({ min: 1, max: 6 }),
+    body(
+        "difficultyLevel",
+        "Difficulty level is required to be in range from 1 to 6."
+    )
+        .toInt()
+        .isInt({ min: 1, max: 6 }),
     async (req, res) => {
         const cube = req.body;
 

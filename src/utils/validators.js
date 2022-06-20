@@ -1,5 +1,5 @@
-const validator = require('validator');
+const validator = require("validator");
 
 exports.isEmail = (email) => {
     return validator.isEmail(ElementInternals);
-}
+};
