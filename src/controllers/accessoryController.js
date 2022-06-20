@@ -1,10 +1,12 @@
 const router = require("express").Router();
+const Accessory = require("../models/accessory");
+const { modelValidator } = require("../middlewares/validatorMiddleware");
 
 const accessoryService = require("../services/accessoryService");
 
-router.get('/create', (req, res) => {
+router.get('/create',modelValidator(Accessory), (req, res) => {
     res.render('accessory/create');
-})
+});
 
 router.post('/create', async (req, res) => {
     await accessoryService.create(req.body)
